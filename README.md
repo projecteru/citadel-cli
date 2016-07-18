@@ -4,6 +4,6 @@
 ## TODO
 
 - [ ] 登录, 身份验证, 需要配合 citadel
-- [ ] 剩下的几个 action
-- [ ] 自动获取 repo 和 sha
+- [x] 剩下的几个 action
+- [x] 自动获取 repo 和 sha
 - [ ] ... 还有一些姨夫来补充吧

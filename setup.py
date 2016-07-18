@@ -13,6 +13,8 @@ setup(
         'requests',
         'setuptools',
         'prettytable',
+        'pyyaml',
+        'envoy',
     ],
     entry_points={
         'console_scripts': [
