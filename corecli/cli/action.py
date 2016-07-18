@@ -10,7 +10,7 @@ from corecli.cli.utils import (
 
 def _get_repo(repo):
     ctx = click.get_current_context()
-    repo = repo or get_remote_url(ctx.obj['remotename'])
+    repo = repo or get_remote_url(remote=ctx.obj['remotename'])
     if not repo:
         click.echo(error('repository is not set, check repository or pass argument'))
         ctx.exit(-1)
@@ -100,12 +100,12 @@ def remove(ctx, ids):
             click.echo(error('Fail to remove %s, error: %s' % (m['id'], m['message'])))
 
 
-@click.argument('repo', required=False)
-@click.argument('sha', required=False)
 @click.argument('ids', nargs=-1)
+@click.option('--repo', default='', help='git repository url, default is from `git remote get-url origin`')
+@click.option('--sha', default='', help='git commit hash, default is from `git rev-parse HEAD`')
 @click.pass_context
 @handle_core_error
-def upgrade(ctx, repo, sha, ids):
+def upgrade(ctx, ids, repo, sha):
     if not ids:
         click.echo(error('No ids given'))
         ctx.exit(-1)
