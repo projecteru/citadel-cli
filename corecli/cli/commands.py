@@ -13,6 +13,14 @@ from corecli.cli.app import (
 )
 from corecli.cli.action import (
     build,
+    remove,
+    upgrade,
+    deploy,
+)
+
+from corecli.cli.rpc import (
+    get_networks,
+    get_pod,
 )
 
 
@@ -27,6 +35,13 @@ commands = {
     'release:specs': get_release_specs,
     'release:container': get_release_containers,
 
+    'pod:get': get_pod,
+
+    'network:get': get_networks,
+
     'register': register_release,
+    'deploy': deploy,
     'build': build,
+    'remove': remove,
+    'upgrade': upgrade,
 }

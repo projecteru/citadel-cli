@@ -43,7 +43,7 @@ class ActionMixin(object):
         """删除这些容器.
         ids: 容器ID, 需要填写完整的64个字符的字符串ID, 是一个list.
         """
-        if not isinstance(ids, list):
+        if not isinstance(ids, (list, tuple)):
             ids = [ids]
         data = {'ids': ids}
         return self._do_stream('/remove', method='POST', json=data)
@@ -54,7 +54,7 @@ class ActionMixin(object):
         repo: 仓库地址, 如git@github.com:name/project.git.
         sha: 要打包的版本号, git sha值.
         """
-        if not isinstance(ids, list):
+        if not isinstance(ids, (list, tuple)):
             ids = [ids]
         data = {'ids': ids, 'repo': repo, 'sha': sha}
         return self._do_stream('/upgrade', method='POST', json=data)

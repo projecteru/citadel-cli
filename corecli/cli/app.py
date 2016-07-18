@@ -4,7 +4,8 @@ import click
 import yaml
 from prettytable import PrettyTable
 
-from corecli.cli.utils import handle_core_error, error, info
+from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
+        handle_core_error, error, info)
 
 
 def _container_table(containers):
@@ -20,11 +21,30 @@ def _container_table(containers):
     return table
 
 
-@click.argument('appname')
+def _get_appname(appname):
+    appname = appname or get_appname()
+    if not appname:
+        click.echo(error('appname not specified, check app.yaml or pass argument to it.'))
+        ctx = click.get_current_context()
+        ctx.exit(-1)
+    return appname
+
+
+def _get_sha(sha):
+    sha = sha or get_commit_hash()
+    if not sha:
+        click.echo(error('commit hash not found, check repository or pass argument.'))
+        ctx = click.get_current_context()
+        ctx.exit(-1)
+    return sha
+
+
+@click.argument('appname', required=False)
 @click.pass_context
 @handle_core_error
 def get_app(ctx, appname):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
     app = core.get_app(appname)
 
     table = PrettyTable(['name', 'git', 'created'])
@@ -33,11 +53,12 @@ def get_app(ctx, appname):
     click.echo(table)
 
 
-@click.argument('appname')
+@click.argument('appname', required=False)
 @click.pass_context
 @handle_core_error
 def get_app_envs(ctx, appname):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
     envs = core.get_app_envs(appname)
 
     table = PrettyTable(['name'])
@@ -49,12 +70,13 @@ def get_app_envs(ctx, appname):
 
 
 @click.argument('action')
-@click.argument('appname')
 @click.argument('envname')
 @click.argument('envvars', nargs=-1)
+@click.option('--app', default='', help='appname, default is from app.yaml')
 @click.pass_context
 @handle_core_error
-def app_env(ctx, action, appname, envname, envvars):
+def app_env(ctx, action, envname, envvars, app):
+    appname = _get_appname(app)
     core = ctx.obj['coreapi']
 
     if action == 'get':
@@ -89,20 +111,23 @@ def app_env(ctx, action, appname, envname, envvars):
     click.echo(error('ACTION must be in "get" / "set" / "delete" / "remove".'))
 
 
-@click.argument('appname')
+@click.argument('appname', required=False)
 @click.pass_context
 @handle_core_error
 def get_app_containers(ctx, appname):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+
     containers = core.get_app_containers(appname)
     click.echo(_container_table(containers))
 
 
-@click.argument('appname')
+@click.argument('appname', required=False)
 @click.pass_context
 @handle_core_error
 def get_app_releases(ctx, appname):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
     releases = core.get_app_releases(appname)
 
     table = PrettyTable(['name', 'sha', 'image', 'created'])
@@ -111,12 +136,15 @@ def get_app_releases(ctx, appname):
     click.echo(table)
 
 
-@click.argument('appname')
-@click.argument('sha')
+@click.argument('appname', required=False)
+@click.argument('sha', required=False)
 @click.pass_context
 @handle_core_error
 def get_release(ctx, appname, sha):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+    sha = _get_sha(sha)
+
     r = core.get_release(appname, sha)
 
     table = PrettyTable(['name', 'sha', 'image', 'created'])
@@ -124,32 +152,45 @@ def get_release(ctx, appname, sha):
     click.echo(table)
 
 
-@click.argument('appname')
-@click.argument('sha')
+@click.argument('appname', required=False)
+@click.argument('sha', required=False)
 @click.pass_context
 @handle_core_error
 def get_release_specs(ctx, appname, sha):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+    sha = _get_sha(sha)
+
     release = core.get_release(appname, sha)
     click.echo(yaml.safe_dump(release['specs'], default_flow_style=False))
 
 
-@click.argument('appname')
-@click.argument('sha')
+@click.argument('appname', required=False)
+@click.argument('sha', required=False)
 @click.pass_context
 @handle_core_error
 def get_release_containers(ctx, appname, sha):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+    sha = _get_sha(sha)
+
     containers = core.get_release_containers(appname, sha)
     click.echo(_container_table(containers))
 
 
-@click.argument('appname')
-@click.argument('sha')
-@click.argument('git')
+@click.argument('appname', required=False)
+@click.argument('sha', required=False)
+@click.argument('git', required=False)
 @click.pass_context
 @handle_core_error
 def register_release(ctx, appname, sha, git):
     core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+    sha = _get_sha(sha)
+    git = git or get_remote_url(remote=ctx.obj['remotename'])
+    if not git:
+        click.echo(error('repository url is not set, check repository or pass argument'))
+        ctx.exit(-1)
+
     core.register_release(appname, sha, git)
     click.echo(info('Register %s %s %s done.' % (appname, sha, git)))
