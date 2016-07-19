@@ -6,3 +6,6 @@ local_config.py
 tests/__pycache__/*
 .ropeproject
 *.egg-info
+build/*
+demo.log
+dist/*

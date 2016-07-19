@@ -5,6 +5,12 @@ import yaml
 import click
 import envoy
 from functools import wraps
+import socket
+import sys
+import termios
+import tty
+from paramiko.py3compat import u
+
 from corecli.api.client import CoreAPIError
 
 
@@ -61,3 +67,32 @@ def get_appname(cwd=None):
     except IOError:
         return ''
     return specs.get('appname', '')
+
+# 抄paramiko的demo的interative shell
+def interactive_shell(chan):
+    import select
+    oldtty = termios.tcgetattr(sys.stdin)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        tty.setcbreak(sys.stdin.fileno())
+        chan.settimeout(0.0)
+
+        while True:
+            r, _, _ = select.select([chan, sys.stdin], [], [])
+            if chan in r:
+                try:
+                    x = u(chan.recv(1024))
+                    if len(x) == 0:
+                        sys.stdout.write('\r\n*** EOF\r\n')
+                        break
+                    sys.stdout.write(x)
+                    sys.stdout.flush()
+                except socket.timeout:
+                    pass
+            if sys.stdin in r:
+                x = sys.stdin.read(1)
+                if len(x) == 0:
+                    break
+                chan.send(x)
+    finally:
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)

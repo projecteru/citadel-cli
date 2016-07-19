@@ -11,6 +11,7 @@ from corecli.cli.app import (
     get_release_containers,
     register_release,
 )
+
 from corecli.cli.action import (
     build,
     remove,
@@ -23,6 +24,11 @@ from corecli.cli.rpc import (
     get_pod,
 )
 
+from corecli.cli.mimiron import (
+    container_login,
+    list_containers,
+    enter_container,
+)
 
 commands = {
     'app:get': get_app,
@@ -44,4 +50,8 @@ commands = {
     'build': build,
     'remove': remove,
     'upgrade': upgrade,
+
+    'mimiron:login': container_login,
+    'mimiron:list': list_containers,
+    'mimiron:enter': enter_container,
 }
