@@ -16,7 +16,7 @@ def core_commands(ctx, citadel_url, remotename):
         click.echo(error('either set --citadel-url, or set CITADEL_URL in environment.'))
         ctx.exit(-1)
 
-    ctx.obj['coreapi'] = CoreAPI(citadel_url)
+    ctx.obj['coreapi'] = CoreAPI(citadel_url.strip('/'))
     ctx.obj['remotename'] = remotename
 
 
