@@ -15,6 +15,7 @@ setup(
         'prettytable',
         'pyyaml',
         'envoy',
+        'paramiko',
     ],
     entry_points={
         'console_scripts': [
