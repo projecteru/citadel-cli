@@ -25,7 +25,7 @@ def list_containers():
 def enter_container(ctx, cid, username, port):
     hostname = ctx.obj['mimironurl']
     if not hostname:
-        click.ehco(error('either set --mimiron-url, or set MIMIRON_URL in environment'))
+        click.echo(error('either set --mimiron-url, or set MIMIRON_URL in environment'))
         ctx.exit(-1)
 
     pw = os.getenv('MIMIRON_PWD')
