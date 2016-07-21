@@ -12,7 +12,7 @@ class ActionMixin(object):
         data = {'repo': repo, 'sha': sha, 'artifact': artifact, 'uid': uid}
         return self._do_stream('/build', method='POST', json=data)
 
-    def deploy(self, repo, sha, podname, entrypoint, cpu_quota, count, networks=None, envname=None, extra_env=None):
+    def deploy(self, repo, sha, podname, nodename, entrypoint, cpu_quota, count, networks=None, envname=None, extra_env=None):
         """部署一个仓库.
         repo: 仓库地址, 如git@github.com:name/project.git.
         sha: 要部署的版本号, git sha值.
@@ -28,6 +28,7 @@ class ActionMixin(object):
         data['repo'] = repo
         data['sha'] = sha
         data['podname'] = podname
+        data['nodename'] = nodename
         data['entrypoint'] = entrypoint
         data['cpu_quota'] = cpu_quota
         data['count'] = count

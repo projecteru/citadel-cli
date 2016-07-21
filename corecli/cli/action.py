@@ -57,11 +57,12 @@ def build(ctx, repo, sha, artifact, uid):
 @click.option('--cpu', default=0, type=float, help='how many CPUs to set, e.g. --cpu 1.5')
 @click.option('--count', default=1, type=int, help='how many containers to deploy, e.g. --count 2')
 @click.option('--networks', default='', help='networks to bind, NetworkName:IP, e.g. --networks network:10.102.0.37 --networks network', multiple=True)
+@click.option('--nodename', default='', help='nodename to deploy, e.g. --nodename zzz1')
 @click.option('--envname', default='', help='envname to use')
 @click.option('--extraenv', default='', help='extra environment variables, e.g. --extraenv KEY1=VALUE1 --extraenv KEY2=VALUE2', multiple=True)
 @click.pass_context
 @handle_core_error
-def deploy(ctx, podname, entrypoint, repo, sha, cpu, count, networks, envname, extraenv):
+def deploy(ctx, podname, entrypoint, repo, sha, cpu, count, networks, nodename, envname, extraenv):
 
     def _networks_dict(networks):
         ns = []
@@ -77,7 +78,7 @@ def deploy(ctx, podname, entrypoint, repo, sha, cpu, count, networks, envname, e
     sha = _get_sha(sha)
 
     core = ctx.obj['coreapi']
-    for m in core.deploy(repo, sha, podname, entrypoint, cpu, count, networks, envname, extraenv):
+    for m in core.deploy(repo, sha, podname, nodename, entrypoint, cpu, count, networks, envname, extraenv):
         if not m['success']:
             click.echo(error(m['error']))
         else:
