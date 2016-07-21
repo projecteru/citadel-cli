@@ -4,6 +4,7 @@ import click
 import paramiko
 import socket
 import os
+from prettytable import PrettyTable
 
 from corecli.cli.utils import (
     interactive_shell,
@@ -14,8 +15,15 @@ from corecli.cli.utils import (
 def container_login():
     pass
 
-def list_containers():
-    pass
+@click.argument('username', required=True)
+@click.pass_context
+@handle_core_error
+def list_containers(ctx, username):
+    core = ctx.obj['coreapi']
+    info = core.get_container_info(username)
+    table = PrettyTable(['appname', 'entrypoint', 'container_id'])
+    [table.add_row([t['appname'], t['entrypoint'], t['cid']]) for t in info]
+    click.echo(table)
 
 @click.argument('cid', required=True)
 @click.argument('username', required=True)

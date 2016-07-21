@@ -9,6 +9,7 @@ from corecli.api.pod import PodMixin
 from corecli.api.container import ContainerMixin
 from corecli.api.network import NetworkMixin
 from corecli.api.action import ActionMixin
+from corecli.api.mimiron import MimironMixin
 
 
 class CoreAPIError(Exception):
@@ -18,7 +19,7 @@ class CoreAPIError(Exception):
         self.message = message
 
 
-class CoreAPI(AppMixin, PodMixin, ContainerMixin, NetworkMixin, ActionMixin):
+class CoreAPI(AppMixin, PodMixin, ContainerMixin, NetworkMixin, ActionMixin, MimironMixin):
 
     def __init__(self, host, version='v1', timeout=None, username='', password=''):
         self.host = host
