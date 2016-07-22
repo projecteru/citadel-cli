@@ -2,5 +2,5 @@
 
 class MimironMixin(object):
 
-    def get_container_info(self, username):
+    def get_mimiron_container_info(self, username):
         return self._do('/mimiron/container/{}'.format(username))

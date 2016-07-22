@@ -16,11 +16,17 @@ def container_login():
     pass
 
 @click.argument('username', required=True)
+@click.option('--app', '-a')
+@click.option('--entrypoint', '-e')
 @click.pass_context
 @handle_core_error
-def list_containers(ctx, username):
+def list_containers(ctx, username, app, entrypoint):
     core = ctx.obj['coreapi']
-    info = core.get_container_info(username)
+    info = core.get_mimiron_container_info(username)
+    if app:
+        info = [t for t in info if t['appname']==app]
+    if entrypoint:
+        info = [t for t in info if t['entrypoint']==entrypoint]
     table = PrettyTable(['appname', 'entrypoint', 'container_id'])
     [table.add_row([t['appname'], t['entrypoint'], t['cid']]) for t in info]
     click.echo(table)
