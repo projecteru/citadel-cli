@@ -21,7 +21,7 @@ class CoreAPIError(Exception):
 
 class CoreAPI(AppMixin, PodMixin, ContainerMixin, NetworkMixin, ActionMixin, MimironMixin):
 
-    def __init__(self, host, version='v1', timeout=None, username='', password=''):
+    def __init__(self, host, version='v1', timeout=None, username='', password='', auth_token=''):
         self.host = host
         self.version = version
         self.timeout = timeout
@@ -32,6 +32,7 @@ class CoreAPI(AppMixin, PodMixin, ContainerMixin, NetworkMixin, ActionMixin, Mim
 
         self.base = '%s/api/%s' % (self.host, version)
         self.session = Session()
+        self.session.headers.update({'X-Neptulon-Token': auth_token})
 
     def _do(self, path, method='GET', params=None, data=None, json=None, expected_code=200):
         """非stream返回"""

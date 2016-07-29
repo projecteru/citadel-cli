@@ -1,14 +1,15 @@
 # coding: utf-8
-
+import json
 import os
-import yaml
-import click
-import envoy
-from functools import wraps
 import socket
 import sys
 import termios
 import tty
+from functools import wraps
+
+import click
+import envoy
+import yaml
 from paramiko.py3compat import u
 
 from corecli.api.client import CoreAPIError
@@ -68,8 +69,9 @@ def get_appname(cwd=None):
         return ''
     return specs.get('appname', '')
 
-# 抄paramiko的demo的interative shell
+
 def interactive_shell(chan):
+    # 抄paramiko的demo的interative shell
     import select
     oldtty = termios.tcgetattr(sys.stdin)
     try:
@@ -96,3 +98,16 @@ def interactive_shell(chan):
                 chan.send(x)
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
+
+
+def read_json_file(path):
+    try:
+        with open(path) as f:
+            return json.loads(f.read())
+    except (OSError, IOError):
+        return None
+
+
+def write_json_file(dic, path):
+    with open(path, 'w') as f:
+        f.write(json.dumps(dic))
