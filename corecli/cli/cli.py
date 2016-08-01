@@ -1,25 +1,29 @@
 # coding: utf-8
+from os.path import expanduser
 
 import click
 
 from corecli.api.client import CoreAPI
-from corecli.cli.utils import error
 from corecli.cli.commands import commands
+from corecli.cli.utils import read_json_file, write_json_file
 
 
 @click.group()
-@click.option('--citadel-url', default=None, help='url for CITADEL', envvar='CITADEL_URL')
+@click.option('--config-path', default=expanduser('~/.corecli.json'), help='config file, json', envvar='CITADEL_CONFIG_PATH')
 @click.option('--remotename', default='origin', help='git remote name, default to origin', envvar='CORECLI_REPO_NAME')
-@click.option('--mimiron-url', default=None, help='url for MIMIRON', envvar='MIMIRON_URL')
 @click.pass_context
-def core_commands(ctx, citadel_url, remotename, mimiron_url):
-    if not citadel_url:
-        click.echo(error('either set --citadel-url, or set CITADEL_URL in environment.'))
-        ctx.exit(-1)
+def core_commands(ctx, config_path, remotename):
+    config = read_json_file(config_path)
+    if not config:
+        config = {}
+        config['auth_token'] = click.prompt('Please enter neptulon token')
+        config['citadel_url'] = click.prompt('Please enter citadel server url', default='http://127.0.0.1:5003')
+        config['mimiron_url'] = click.prompt('Please enter mimiron url', default='')
+        write_json_file(config, config_path)
 
-    ctx.obj['coreapi'] = CoreAPI(citadel_url.strip('/'))
+    ctx.obj['coreapi'] = CoreAPI(config['citadel_url'].strip('/'), auth_token=config['auth_token'])
     ctx.obj['remotename'] = remotename
-    ctx.obj['mimironurl'] = mimiron_url
+    ctx.obj['mimironurl'] = config['mimiron_url']
 
 
 for command, function in commands.iteritems():
