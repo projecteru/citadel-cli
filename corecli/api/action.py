@@ -59,3 +59,16 @@ class ActionMixin(object):
             ids = [ids]
         data = {'ids': ids, 'repo': repo, 'sha': sha}
         return self._do_stream('/upgrade', method='POST', json=data)
+
+    def log(self, nodename, appname):
+        """走agent拿nodename的appname"""
+        nodenames = {}
+        for p in self.get_pods():
+            for n in self.get_pod_nodes(p['name']):
+                nodenames[n['name']] = p['name']
+        podname = nodenames.get(nodename, '')
+        if not podname:
+            return None
+
+        data = {'appname': appname, 'podname': podname, 'nodename': nodename}
+        return self._do_stream('/log', method='POST', json=data)

@@ -120,3 +120,20 @@ def upgrade(ctx, ids, repo, sha):
             click.echo(info('Container %s upgrade to %s / %s successfully' % (m['id'], m['new_id'], m['new_name'])))
         else:
             click.echo(error('Fail to upgrade %s, error: %s' % (m['id'], m['error'])))
+
+
+@click.argument('nodename')
+@click.argument('appname')
+@click.pass_context
+@handle_core_error
+def log(ctx, nodename, appname):
+    core = ctx.obj['coreapi']
+    logs = core.log(nodename, appname)
+
+    if logs is None:
+        click.echo(error('wrong nodename %s' % nodename))
+        ctx.exit(-1)
+
+    for m in logs:
+        click.echo('[%s, %s, %s, %s, %s] %s' % (m['datetime'], m['type'],
+            m['entrypoint'], m['id'][:7], m['ident'], m['data']))

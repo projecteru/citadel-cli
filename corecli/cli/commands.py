@@ -17,6 +17,7 @@ from corecli.cli.action import (
     remove,
     upgrade,
     deploy,
+    log,
 )
 
 from corecli.cli.rpc import (
@@ -50,6 +51,7 @@ commands = {
     'build': build,
     'remove': remove,
     'upgrade': upgrade,
+    'log': log,
 
     'mimiron:login': container_login,
     'mimiron:list': list_containers,
