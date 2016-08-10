@@ -26,7 +26,6 @@ from corecli.cli.rpc import (
 )
 
 from corecli.cli.mimiron import (
-    container_login,
     list_containers,
     enter_container,
 )
@@ -53,7 +52,6 @@ commands = {
     'upgrade': upgrade,
     'log': log,
 
-    'mimiron:login': container_login,
     'mimiron:list': list_containers,
     'mimiron:enter': enter_container,
 }

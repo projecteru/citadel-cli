@@ -25,10 +25,10 @@ class CoreAPI(AppMixin, PodMixin, ContainerMixin, NetworkMixin, ActionMixin, Mim
         self.host = host
         self.version = version
         self.timeout = timeout
-        # TODO 要是这里可以登录, 那就需要citadel那边可以直接登录...
-        # 或者直接往sso登录, 之后用一个token来给citadel, citadel用这个token找sso要用户.
+        # 在CoreAPI初始化之前，去SSO取了username回来
         self.username = username
-        self.password = password
+        self.password = password #待会看看没有用到就吧这个删掉吧
+        self.auth_token = auth_token
 
         self.base = '%s/api/%s' % (self.host, version)
         self.session = Session()
