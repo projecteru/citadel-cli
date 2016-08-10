@@ -12,16 +12,13 @@ from corecli.cli.utils import (
     error,
 )
 
-def container_login():
-    pass
-
-@click.argument('username', required=True)
 @click.option('--app', '-a')
 @click.option('--entrypoint', '-e')
 @click.pass_context
 @handle_core_error
-def list_containers(ctx, username, app, entrypoint):
+def list_containers(ctx,  app, entrypoint):
     core = ctx.obj['coreapi']
+    username, _ = core.get_mimiron_container_info()
     info = core.get_mimiron_container_info(username)
     if app:
         info = [t for t in info if t['appname']==app]
@@ -32,19 +29,19 @@ def list_containers(ctx, username, app, entrypoint):
     click.echo(table)
 
 @click.argument('cid', required=True)
-@click.argument('username', required=True)
 @click.option('--port', default=2200)
 @click.pass_context
 @handle_core_error
-def enter_container(ctx, cid, username, port):
+def enter_container(ctx, cid, port):
+    core = ctx.obj['coreapi']
     hostname = ctx.obj['mimironurl']
     if not hostname:
         click.echo(error('either set --mimiron-url, or set MIMIRON_URL in environment'))
         ctx.exit(-1)
 
-    pw = os.getenv('MIMIRON_PWD')
-    if not pw:
-        click.echo(error('password is None. Check MIMIRON_PWD in environment:('))
+    username, token = core.get_mimiron_auth_info()
+    if not username or not token:
+        click.echo(error('username or token is None. Check them in ~/.config.json :('))
         ctx.exit(-1)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,9 +51,9 @@ def enter_container(ctx, cid, username, port):
     t.start_client()
 
     username = '{0}~{1}'.format(username, cid)
-    t.auth_password(username, pw)
+    t.auth_password(username, token)
     if not t.is_authenticated():
-        click.echo(error('authentication failed. Check MIMIRON_PWD in environment:('))
+        click.echo(error('authentication failed. Check username and token in ~/.config.json :('))
         t.close()
         ctx.exit(-1)
 

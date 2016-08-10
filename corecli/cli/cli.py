@@ -5,7 +5,7 @@ import click
 
 from corecli.api.client import CoreAPI
 from corecli.cli.commands import commands
-from corecli.cli.utils import read_json_file, write_json_file
+from corecli.cli.utils import read_json_file, write_json_file, get_username
 
 
 @click.group()
@@ -19,12 +19,13 @@ def core_commands(ctx, config_path, remotename):
         config['auth_token'] = click.prompt('Please enter neptulon token')
         config['citadel_url'] = click.prompt('Please enter citadel server url', default='http://127.0.0.1:5003')
         config['mimiron_url'] = click.prompt('Please enter mimiron url', default='')
+        config['sso_url'] = click.prompt('Please enter sso url')
+        config['username'] = get_username(config['sso_url'], config['auth_token'])
         write_json_file(config, config_path)
 
-    ctx.obj['coreapi'] = CoreAPI(config['citadel_url'].strip('/'), auth_token=config['auth_token'])
+    ctx.obj['coreapi'] = CoreAPI(config['citadel_url'].strip('/'), username=config['username'], auth_token=config['auth_token'])
     ctx.obj['remotename'] = remotename
     ctx.obj['mimironurl'] = config['mimiron_url']
-
 
 for command, function in commands.iteritems():
     core_commands.command(command)(function)
