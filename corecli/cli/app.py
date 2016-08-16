@@ -180,6 +180,24 @@ def get_release_containers(ctx, appname, sha):
 
 @click.argument('appname', required=False)
 @click.argument('sha', required=False)
+@click.pass_context
+@handle_core_error
+def delete_release_containers(ctx, appname, sha):
+    core = ctx.obj['coreapi']
+    appname = _get_appname(appname)
+    sha = _get_sha(sha)
+
+    containers = core.get_release_containers(appname, sha)
+    ids = [c['container_id'] for c in containers if c]
+    for m in core.remove(ids):
+        if m['success']:
+            click.echo(info('Container %s removed successfully' % m['id']))
+        else:
+            click.echo(error('Fail to remove %s, error: %s' % (m['id'], m['message'])))
+
+
+@click.argument('appname', required=False)
+@click.argument('sha', required=False)
 @click.argument('git', required=False)
 @click.pass_context
 @handle_core_error

@@ -9,6 +9,7 @@ from corecli.cli.app import (
     get_release,
     get_release_specs,
     get_release_containers,
+    delete_release_containers,
     register_release,
 )
 
@@ -41,6 +42,7 @@ commands = {
     'release:get': get_release,
     'release:specs': get_release_specs,
     'release:container': get_release_containers,
+    'release:offline': delete_release_containers,
 
     'pod:get': get_pod,
 
