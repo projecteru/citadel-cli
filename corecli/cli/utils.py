@@ -13,7 +13,7 @@ import envoy
 import yaml
 from paramiko.py3compat import u
 
-from corecli.api.client import CoreAPIError
+from citadelpy import CoreAPIError
 
 
 def warn(text):
