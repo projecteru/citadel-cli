@@ -3,7 +3,7 @@ from os.path import expanduser
 
 import click
 
-from corecli.api.client import CoreAPI
+from citadelpy import CoreAPI
 from corecli.cli.commands import commands
 from corecli.cli.utils import read_json_file, write_json_file, get_username
 
