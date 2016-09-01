@@ -16,7 +16,7 @@ setup(
         'pyyaml',
         'envoy',
         'paramiko',
-        'citadelpy',
+        'citadel-py',
     ],
     dependency_links=[
         'git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy-0.0.1',
