@@ -1,9 +1,10 @@
 # coding: utf-8
+from os import getenv
 from os.path import expanduser
 
 import click
-
 from citadelpy import CoreAPI
+
 from corecli.cli.commands import commands
 from corecli.cli.utils import read_json_file, write_json_file, get_username
 
@@ -16,12 +17,15 @@ def core_commands(ctx, config_path, remotename):
     config = read_json_file(config_path)
     if not config:
         config = {}
-        config['auth_token'] = click.prompt('Please enter neptulon token')
-        config['citadel_url'] = click.prompt('Please enter citadel server url', default='http://127.0.0.1:5003')
-        config['mimiron_url'] = click.prompt('Please enter mimiron url', default='')
-        config['sso_url'] = click.prompt('Please enter sso url')
+        config['auth_token'] = getenv('CITADEL_AUTH_TOKEN') or click.prompt('Please enter neptulon token')
+        config['citadel_url'] = getenv('CITADEL_URL') or click.prompt('Please enter citadel server url', default='http://127.0.0.1:5003')
+        config['mimiron_url'] = getenv('MIMIRON_URL') or click.prompt('Please enter mimiron url', default='')
+        config['sso_url'] = getenv('SSO_URL') or click.prompt('Please enter sso url', default='http://sso.ricebook.net')
         config['username'] = get_username(config['sso_url'], config['auth_token'])
         write_json_file(config, config_path)
+        click.echo('config saved to %s'.format(config_path))
+    else:
+        click.echo('using config at %s'.format(config_path))
 
     ctx.obj['coreapi'] = CoreAPI(config['citadel_url'].strip('/'), username=config['username'], auth_token=config['auth_token'])
     ctx.obj['remotename'] = remotename
