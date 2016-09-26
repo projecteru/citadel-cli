@@ -9,10 +9,10 @@ from functools import wraps
 
 import click
 import envoy
+import requests
 import yaml
+from citadelpy import CoreAPIError
 from paramiko.py3compat import u
-
-from corecli.api.client import CoreAPIError
 
 
 def warn(text):
@@ -111,3 +111,11 @@ def read_json_file(path):
 def write_json_file(dic, path):
     with open(path, 'w') as f:
         f.write(json.dumps(dic))
+
+
+def get_username(sso_url, token):
+    req = sso_url.strip('/') + '/auth/profile' + '?token=' + token
+    result = requests.get(req)
+    if result.status_code != requests.codes.ok:
+        result.raise_for_status()
+    return result.json()['name']
