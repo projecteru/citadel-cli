@@ -1,4 +1,4 @@
-image: "hub.ricebook.net/base/ubuntu:python-2016.09.06"
+image: "hub.ricebook.net/base/ubuntu:python-2016.09.27"
 before_script:
     - "pip install pyinstaller"
     - "pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy"
