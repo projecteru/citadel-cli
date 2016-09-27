@@ -4,5 +4,6 @@
 Cli for Citadel.
 
 ```shell
-pip install --process-dependency-links --trusted-host gitlab.ricebook.net -e git+git@gitlab.ricebook.net:platform/corecli.git#egg=core-cli
+pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy
+pip install -e git+http://gitlab.ricebook.net/platform/corecli.git#egg=core-cli
 ```
