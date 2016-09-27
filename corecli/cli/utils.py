@@ -70,9 +70,9 @@ def get_remote_url(cwd=None, remote='origin'):
     # 丫有个特殊的格式, 不太好支持...
     match = _GITLAB_CI_REMOTE_URL_PATTERN.match(remote)
     if match:
-        host = match.group(1)
-        group = match.group(2)
-        project = match.group(3)
+        host = match.group(2)
+        group = match.group(3)
+        project = match.group(4)
         return 'git@{host}:{group}/{project}.git'.format(host=host, group=group, project=project)
     return remote
 
