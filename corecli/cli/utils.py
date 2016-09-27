@@ -1,6 +1,9 @@
 # coding: utf-8
+
 import json
+import re
 import os
+import select
 import socket
 import sys
 import termios
@@ -13,6 +16,9 @@ import requests
 import yaml
 from citadelpy import CoreAPIError
 from paramiko.py3compat import u
+
+
+_GITLAB_CI_REMOTE_URL_PATTERN = re.compile(r'http://gitlab-ci-token:(\w+)@([\.\w]+)/([-\w]+)/([-\w]+).git')
 
 
 def warn(text):
@@ -58,7 +64,17 @@ def get_remote_url(cwd=None, remote='origin'):
     r = envoy.run('git remote get-url %s' % str(remote), cwd=cwd)
     if r.status_code:
         return ''
-    return r.std_out.strip()
+    remote = r.std_out.strip()
+
+    # 对gitlab ci需要特殊处理一下
+    # 丫有个特殊的格式, 不太好支持...
+    match = _GITLAB_CI_REMOTE_URL_PATTERN.match(remote)
+    if match:
+        host = match.group(1)
+        group = match.group(2)
+        project = match.group(3)
+        return 'git@{host}:{group}/{project}.git'.format(host=host, group=group, project=project)
+    return remote
 
 
 def get_appname(cwd=None):
@@ -72,7 +88,6 @@ def get_appname(cwd=None):
 
 def interactive_shell(chan):
     # 抄paramiko的demo的interative shell
-    import select
     oldtty = termios.tcgetattr(sys.stdin)
     try:
         tty.setraw(sys.stdin.fileno())
