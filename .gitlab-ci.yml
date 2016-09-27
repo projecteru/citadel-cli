@@ -1,4 +1,4 @@
-image: "hub.ricebook.net/base/alpine:python-2016.09.27"
+image: "hub.ricebook.net/base/ubuntu:python-2016.09.06"
 before_script:
     - "pip install pyinstaller"
     - "pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy"
@@ -6,8 +6,6 @@ before_script:
 build_binary:
     stage: "test"
     script:
-        - "ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1"
-        - "ln -s /lib/libz.so.1 /usr/lib/libz.so.1"
         - "python setup.py install"
         - "pyinstaller corecli.spec"
     artifacts:
