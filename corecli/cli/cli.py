@@ -24,8 +24,6 @@ def core_commands(ctx, config_path, remotename):
         config['username'] = get_username(config['sso_url'], config['auth_token'])
         write_json_file(config, config_path)
         click.echo('config saved to {}'.format(config_path))
-    else:
-        click.echo('using config at {}'.format(config_path))
 
     ctx.obj['coreapi'] = CoreAPI(config['citadel_url'].strip('/'), username=config['username'], auth_token=config['auth_token'])
     ctx.obj['remotename'] = remotename
