@@ -18,7 +18,7 @@ from citadelpy import CoreAPIError
 from paramiko.py3compat import u
 
 
-_GITLAB_CI_REMOTE_URL_PATTERN = re.compile(r'http://gitlab-ci-token:(\w+)@([\.\w]+)/([-\w]+)/([-\w]+).git')
+_GITLAB_CI_REMOTE_URL_PATTERN = re.compile(r'http://gitlab-ci-token:(.+)@([\.\w]+)/([-\w]+)/([-\w]+).git')
 
 
 def warn(text):
