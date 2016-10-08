@@ -37,6 +37,10 @@ def info(text):
     return click.style(text, fg='green')
 
 
+def debug_log(fmt, *args):
+    return normal(fmt % args)
+
+
 def handle_core_error(f):
     @wraps(f)
     def _(*args, **kwargs):
@@ -51,18 +55,30 @@ def handle_core_error(f):
 
 def get_commit_hash(cwd=None):
     """拿cwd的最新的commit hash."""
+    ctx = click.get_current_context()
+
     r = envoy.run('git rev-parse HEAD', cwd=cwd)
     if r.status_code:
+        if ctx.obj['debug']:
+            click.echo(debug_log('get_commit_hash error: (stdout)%s, (stderr)%s', r.std_out, r.std_err))
         return ''
-    return r.std_out.strip()
+
+    commit_hash = r.std_out.strip()
+    if ctx.obj['debug']:
+        click.echo(debug_log('get_commit_hash: %s', commit_hash))
+    return commit_hash
 
 
 def get_remote_url(cwd=None, remote='origin'):
     """拿cwd的remote的url.
     发现envoy.run的command只能是bytes, 不能是unicode.
     """
+    ctx = click.get_current_context()
+
     r = envoy.run('git remote get-url %s' % str(remote), cwd=cwd)
     if r.status_code:
+        if ctx.obj['debug']:
+            click.echo(debug_log('get_remote_url error: (stdour)%s, (stderr)%s', r.std_out, r.std_err))
         return ''
     remote = r.std_out.strip()
 
@@ -74,6 +90,9 @@ def get_remote_url(cwd=None, remote='origin'):
         group = match.group(3)
         project = match.group(4)
         return 'git@{host}:{group}/{project}.git'.format(host=host, group=group, project=project)
+
+    if ctx.obj['debug']:
+        click.echo(debug_log('get_remote_url: %s', remote))
     return remote
 
 
