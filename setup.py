@@ -15,6 +15,7 @@ setup(
         'prettytable',
         'pyyaml',
         'envoy',
+        'click',
         'paramiko',
         'citadel-py',
     ],
