@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 import click
 
 from corecli.cli.utils import (
@@ -30,14 +31,19 @@ def _get_sha(sha):
 @click.argument('sha', required=False)
 @click.option('--artifact', default='', help='artifact url to use')
 @click.option('--uid', default='', help='uid of user inside container image')
+@click.option('--with-artifacts', default=False, help='automatically detect gitlab artifacts file to upload', is_flag=True)
 @click.pass_context
 @handle_core_error
-def build(ctx, repo, sha, artifact, uid):
+def build(ctx, repo, sha, artifact, uid, with_artifacts):
     repo = _get_repo(repo)
     sha = _get_sha(sha)
 
+    gitlab_build_id = ''
+    if os.getenv('GITLAB_CI', '') and with_artifacts:
+        gitlab_build_id = os.getenv('CI_BUILD_ID', '')
+
     core = ctx.obj['coreapi']
-    for m in core.build(repo, sha, artifact, uid):
+    for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
         if m['error']:
             click.echo(error(m['error']), nl=False)
         if m['stream']:
