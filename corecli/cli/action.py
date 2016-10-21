@@ -46,6 +46,7 @@ def build(ctx, repo, sha, artifact, uid, with_artifacts):
     for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
         if m['error']:
             click.echo(error(m['error']), nl=False)
+            ctx.exit(-1)
         if m['stream']:
             click.echo(m['stream'], nl=False)
         if m['status']:
@@ -141,5 +142,4 @@ def log(ctx, nodename, appname):
         ctx.exit(-1)
 
     for m in logs:
-        click.echo('[%s, %s, %s, %s, %s] %s' % (m['datetime'], m['type'],
-            m['entrypoint'], m['id'][:7], m['ident'], m['data']))
+        click.echo('[%s, %s, %s, %s, %s] %s' % (m['datetime'], m['type'], m['entrypoint'], m['id'][:7], m['ident'], m['data']))
