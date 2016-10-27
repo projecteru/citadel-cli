@@ -1,14 +1,16 @@
 image: "hub.ricebook.net/base/ubuntu:python-2016.09.27"
 before_script:
-    - "pip install pyinstaller"
-    - "pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy"
+  - "pip install pyinstaller"
+  - "pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadelpy"
 
 build_binary:
-    stage: "test"
-    script:
-        - "python setup.py install"
-        - "pyinstaller corecli.spec"
-    artifacts:
-        paths:
-            - "dist/corecli"
-        expire_in: "1 week"
+  stage: "test"
+  only:
+    - "master"
+  script:
+    - "python setup.py install"
+    - "pyinstaller corecli.spec"
+  artifacts:
+    paths:
+      - "dist/corecli"
+    expire_in: "1 week"
