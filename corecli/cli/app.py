@@ -200,7 +200,6 @@ def delete_release_containers(ctx, appname, sha):
 @click.argument('sha', required=False)
 @click.argument('git', required=False)
 @click.pass_context
-@handle_core_error
 def register_release(ctx, appname, sha, git):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -210,5 +209,14 @@ def register_release(ctx, appname, sha, git):
         click.echo(error('repository url is not set, check repository or pass argument'))
         ctx.exit(-1)
 
-    core.register_release(appname, sha, git)
+    try:
+        core.register_release(appname, sha, git)
+    except CoreAPIError as e:
+        if 'only project under a group can be registered' in e.message:
+            click.echo(info('Register %s %s %s failed: only project under a group can be registered.' % (appname, sha, git)))
+            ctx.exit(0)
+        else:
+            click.echo(error(e.message))
+            ctx.exit(-1)
+
     click.echo(info('Register %s %s %s done.' % (appname, sha, git)))
