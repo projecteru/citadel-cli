@@ -31,6 +31,7 @@ def core_commands(ctx, config_path, remotename, debug):
     ctx.obj['mimironurl'] = config['mimiron_url']
     ctx.obj['debug'] = debug
 
+
 for command, function in commands.iteritems():
     core_commands.command(command)(function)
 
