@@ -1,11 +1,11 @@
 # coding: utf-8
-
 import click
 import yaml
+from citadelpy import CoreAPIError
 from prettytable import PrettyTable
 
 from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
-        handle_core_error, error, info)
+                               handle_core_error, error, info)
 
 
 def _container_table(containers):
