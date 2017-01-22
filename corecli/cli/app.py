@@ -5,7 +5,8 @@ from citadelpy import CoreAPIError
 from prettytable import PrettyTable
 
 from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
-                               handle_core_error, error, info)
+                               get_current_branch, handle_core_error, error,
+                               info)
 
 
 def _container_table(containers):
@@ -205,12 +206,13 @@ def register_release(ctx, appname, sha, git):
     appname = _get_appname(appname)
     sha = _get_sha(sha)
     git = git or get_remote_url(remote=ctx.obj['remotename'])
+    branch = get_current_branch()
     if not git:
         click.echo(error('repository url is not set, check repository or pass argument'))
         ctx.exit(-1)
 
     try:
-        core.register_release(appname, sha, git)
+        core.register_release(appname, sha, git, branch=branch)
     except CoreAPIError as e:
         if 'only project under a group can be registered' in e.message:
             click.echo(error('Register %s %s %s failed: only project under a group can be registered.' % (appname, sha, git)))

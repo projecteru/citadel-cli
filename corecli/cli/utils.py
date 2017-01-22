@@ -53,6 +53,22 @@ def handle_core_error(f):
     return _
 
 
+def get_current_branch(cwd=None):
+    ctx = click.get_current_context()
+    r = envoy.run('git rev-parse --abbrev-ref HEAD', cwd=cwd)
+    if r.status_code:
+        if ctx.obj['debug']:
+            click.echo(debug_log('get_current_branch error: (stdout)%s, (stderr)%s', r.std_out, r.std_err))
+
+        return ''
+
+    branch = r.std_out.strip()
+    if ctx.obj['debug']:
+        click.echo(debug_log('get_branch: %s', branch))
+
+    return branch
+
+
 def get_commit_hash(cwd=None):
     """拿cwd的最新的commit hash."""
     ctx = click.get_current_context()
