@@ -1,14 +1,14 @@
 # coding: utf-8
-
 import json
-import re
 import os
+import re
 import select
 import socket
 import sys
 import termios
 import tty
 from functools import wraps
+from os import getenv
 
 import click
 import envoy
@@ -54,6 +54,9 @@ def handle_core_error(f):
 
 
 def get_current_branch(cwd=None):
+    """inside gitlab-ci, repo is at detached state, so you cannot get branch
+    name from the current git repo, but luckily there's a environment
+    variable called CI_BUILD_REF_NAME"""
     ctx = click.get_current_context()
     r = envoy.run('git rev-parse --abbrev-ref HEAD', cwd=cwd)
     if r.status_code:
@@ -63,6 +66,9 @@ def get_current_branch(cwd=None):
         return ''
 
     branch = r.std_out.strip()
+    if branch == 'HEAD':
+        branch = getenv('CI_BUILD_REF_NAME', '')
+
     if ctx.obj['debug']:
         click.echo(debug_log('get_branch: %s', branch))
 
