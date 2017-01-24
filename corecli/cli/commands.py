@@ -26,6 +26,11 @@ from corecli.cli.rpc import (
     get_pod,
 )
 
+from corecli.cli.pod import (
+    get_memcap,
+    sync_memcap,
+)
+
 from corecli.cli.mimiron import (
     list_containers,
     enter_container,
@@ -44,6 +49,8 @@ commands = {
     'release:offline': delete_release_containers,
 
     'pod:get': get_pod,
+    'pod:getmemcap': get_memcap,
+    'pod:syncmemcap': sync_memcap,
 
     'network:get': get_networks,
 
