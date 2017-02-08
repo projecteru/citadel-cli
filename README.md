@@ -4,6 +4,6 @@
 Cli for Citadel.
 
 ```shell
-pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadel-py
-pip install -e git+http://gitlab.ricebook.net/platform/corecli.git#egg=core-cli
+pip install -e git+http://gitlab.ricebook.net/platform/citadel-py.git#egg=citadel-py --src /opt/citadel/src
+pip install -e git+http://gitlab.ricebook.net/platform/corecli.git#egg=core-cli --src /opt/citadel/src
 ```
