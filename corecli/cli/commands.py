@@ -36,14 +36,6 @@ from corecli.cli.mimiron import (
     enter_container,
 )
 
-from corecli.cli.virtualip import (
-    set_vip,
-    del_vip,
-    migrate_vip,
-    list_vip,
-)
-
-
 commands = {
     'app:get': get_app,
     'app:envs': get_app_envs,
@@ -71,9 +63,4 @@ commands = {
 
     'mimiron:list': list_containers,
     'mimiron:enter': enter_container,
-
-    'vip:set': set_vip,
-    'vip:del': del_vip,
-    'vip:migrate': migrate_vip,
-    'vip:list': list_vip
 }
