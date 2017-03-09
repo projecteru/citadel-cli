@@ -1,7 +1,8 @@
 # coding: utf-8
-
 import os
+
 import click
+from citadelpy import CoreAPIError
 
 from corecli.cli.utils import (
     error, info, handle_core_error,
@@ -33,7 +34,6 @@ def _get_sha(sha):
 @click.option('--uid', default='', help='uid of user inside container image')
 @click.option('--with-artifacts', default=False, help='automatically detect gitlab artifacts file to upload', is_flag=True)
 @click.pass_context
-@handle_core_error
 def build(ctx, repo, sha, artifact, uid, with_artifacts):
     repo = _get_repo(repo)
     sha = _get_sha(sha)
@@ -43,10 +43,21 @@ def build(ctx, repo, sha, artifact, uid, with_artifacts):
         gitlab_build_id = os.getenv('CI_BUILD_ID', '')
 
     core = ctx.obj['coreapi']
-    for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
+    try:
+        ms = core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id)
+    except CoreAPIError as e:
+        if 'not found' in str(e).lower():
+            click.echo(error(str(e)))
+            ctx.exit()
+
+    for m in ms:
         if m['error']:
-            click.echo(error(m['error']), nl=False)
-            ctx.exit(-1)
+            if 'not found' in m['error'].lower():
+                click.echo(error(m['error']))
+                ctx.exit()
+            else:
+                click.echo(error(m['error']), nl=False)
+                ctx.exit(-1)
         if m['stream']:
             click.echo(m['stream'], nl=False)
         if m['status']:
