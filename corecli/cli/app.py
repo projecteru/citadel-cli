@@ -214,7 +214,7 @@ def register_release(ctx, appname, sha, git):
     try:
         core.register_release(appname, sha, git, branch=branch)
     except CoreAPIError as e:
-        if 'only project under a group can be registered' in e.message.lower():
+        if 'only project under a group' in e.message.lower():
             click.echo(error(str(e)))
             ctx.exit()
         else:
