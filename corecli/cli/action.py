@@ -44,26 +44,26 @@ def build(ctx, repo, sha, artifact, uid, with_artifacts):
 
     core = ctx.obj['coreapi']
     try:
-        ms = core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id)
+        for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
+            if m['error']:
+                error_lower = m['error'].lower()
+                if 'not found' in error_lower or 'only project under' in error_lower:
+                    click.echo(error(m['error']))
+                    ctx.exit()
+                else:
+                    click.echo(error(m['error']), nl=False)
+                    ctx.exit(-1)
+            if m['stream']:
+                click.echo(m['stream'], nl=False)
+            if m['status']:
+                click.echo(info(m['status']))
+                if m['progress']:
+                    click.echo(m['progress'])
     except CoreAPIError as e:
-        if 'not found' in str(e).lower():
+        error_lower = str(e).lower()
+        if 'not found' in error_lower or 'only project under' in error_lower:
             click.echo(error(str(e)))
             ctx.exit()
-
-    for m in ms:
-        if m['error']:
-            if 'not found' in m['error'].lower():
-                click.echo(error(m['error']))
-                ctx.exit()
-            else:
-                click.echo(error(m['error']), nl=False)
-                ctx.exit(-1)
-        if m['stream']:
-            click.echo(m['stream'], nl=False)
-        if m['status']:
-            click.echo(info(m['status']))
-            if m['progress']:
-                click.echo(m['progress'])
 
     click.echo(info('Build %s %s done.' % (repo, sha)))
 
