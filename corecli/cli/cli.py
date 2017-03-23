@@ -21,7 +21,6 @@ def core_commands(ctx, zone, config_path, remotename, debug):
         config = {}
         config['auth_token'] = getenv('CITADEL_AUTH_TOKEN') or click.prompt('Please enter neptulon token')
         config['citadel_url'] = getenv('CITADEL_URL') or click.prompt('Please enter citadel server url', default='http://127.0.0.1:5003')
-        config['mimiron_url'] = getenv('MIMIRON_URL') or click.prompt('Please enter mimiron url', default='')
         config['sso_url'] = getenv('SSO_URL') or click.prompt('Please enter sso url', default='http://sso.ricebook.net')
         config['username'] = get_username(config['sso_url'], config['auth_token'])
         write_json_file(config, config_path)
@@ -33,7 +32,6 @@ def core_commands(ctx, zone, config_path, remotename, debug):
 
     ctx.obj['coreapi'] = coreapi
     ctx.obj['remotename'] = remotename
-    ctx.obj['mimironurl'] = config['mimiron_url']
     ctx.obj['debug'] = debug
 
 

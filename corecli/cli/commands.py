@@ -31,11 +31,6 @@ from corecli.cli.pod import (
     sync_memcap,
 )
 
-from corecli.cli.mimiron import (
-    list_containers,
-    enter_container,
-)
-
 commands = {
     'app:get': get_app,
     'app:envs': get_app_envs,
@@ -60,7 +55,4 @@ commands = {
     'remove': remove,
     'upgrade': upgrade,
     'log': log,
-
-    'mimiron:list': list_containers,
-    'mimiron:enter': enter_container,
 }
