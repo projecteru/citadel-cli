@@ -2,11 +2,6 @@
 import json
 import os
 import re
-import select
-import socket
-import sys
-import termios
-import tty
 from functools import wraps
 from os import getenv
 
@@ -15,7 +10,6 @@ import envoy
 import requests
 import yaml
 from citadelpy import CoreAPIError
-from paramiko.py3compat import u
 
 
 _GITLAB_CI_REMOTE_URL_PATTERN = re.compile(r'http://gitlab-ci-token:(.+)@([\.\w]+)/([-\w]+)/([-\w]+).git')
@@ -125,35 +119,6 @@ def get_appname(cwd=None):
     except IOError:
         return ''
     return specs.get('appname', '')
-
-
-def interactive_shell(chan):
-    # 抄paramiko的demo的interative shell
-    oldtty = termios.tcgetattr(sys.stdin)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        tty.setcbreak(sys.stdin.fileno())
-        chan.settimeout(0.0)
-
-        while True:
-            r, _, _ = select.select([chan, sys.stdin], [], [])
-            if chan in r:
-                try:
-                    x = u(chan.recv(1024))
-                    if len(x) == 0:
-                        sys.stdout.write('\r\n*** EOF\r\n')
-                        break
-                    sys.stdout.write(x)
-                    sys.stdout.flush()
-                except socket.timeout:
-                    pass
-            if sys.stdin in r:
-                x = sys.stdin.read(1)
-                if len(x) == 0:
-                    break
-                chan.send(x)
-    finally:
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, oldtty)
 
 
 def read_json_file(path):

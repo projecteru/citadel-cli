@@ -16,7 +16,6 @@ setup(
         'pyyaml',
         'envoy',
         'click',
-        'paramiko',
         'citadel-py',
     ],
     entry_points={
