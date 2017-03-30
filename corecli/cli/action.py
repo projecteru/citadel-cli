@@ -2,12 +2,9 @@
 import os
 
 import click
-from citadelpy import CoreAPIError
 
-from corecli.cli.utils import (
-    error, info, handle_core_error,
-    get_commit_hash, get_remote_url,
-)
+from citadelpy import CoreAPIError
+from corecli.cli.utils import error, info, handle_core_error, get_commit_hash, get_remote_url
 
 
 def _get_repo(repo):

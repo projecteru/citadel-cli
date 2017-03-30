@@ -127,16 +127,3 @@ def read_json_file(path):
             return json.loads(f.read())
     except (OSError, IOError):
         return None
-
-
-def write_json_file(dic, path):
-    with open(path, 'w') as f:
-        f.write(json.dumps(dic))
-
-
-def get_username(sso_url, token):
-    req = sso_url.strip('/') + '/auth/profile' + '?token=' + token
-    result = requests.get(req)
-    if result.status_code != requests.codes.ok:
-        result.raise_for_status()
-    return result.json()['name']
