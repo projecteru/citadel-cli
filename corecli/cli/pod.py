@@ -3,7 +3,7 @@
 import click
 from prettytable import PrettyTable
 
-from corecli.cli.utils import error, handle_core_error
+from corecli.cli.utils import handle_core_error
 
 
 @click.argument('podname')
@@ -13,7 +13,7 @@ def get_memcap(ctx, podname):
     core = ctx.obj['coreapi']
     res = core.get_memcap(podname)
     table = PrettyTable(['node', 'total', 'used', 'used_by_memcap', 'diff'])
-    for node, info in res.iteritems():
+    for node, info in res.items():
         table.add_row([node, info['total'], info['used'], info['used_by_memcap'], info['diff']])
 
     click.echo(table)

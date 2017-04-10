@@ -1,9 +1,9 @@
 # coding: utf-8
 import click
 import yaml
-from citadelpy import CoreAPIError
 from prettytable import PrettyTable
 
+from citadelpy import CoreAPIError
 from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
                                get_current_branch, handle_core_error, error,
                                info)
@@ -17,7 +17,7 @@ def _container_table(containers):
         except KeyError:
             networks = {}
 
-        ns = ['%s:%s' % (name, network['IPAddress']) for name, network in networks.iteritems()]
+        ns = ['%s:%s' % (name, network['IPAddress']) for name, network in networks.items()]
         table.add_row([c['name'], c['container_id'], c['nodename'], c['podname'], c['appname'], c['sha'][:7], c['entrypoint'], c['env'], c['cpu_quota'], ','.join(ns)])
     return table
 
@@ -86,7 +86,7 @@ def app_env(ctx, action, envname, envvars, app):
         table = PrettyTable(['key', 'value'])
         table.align['value'] = 'l'
 
-        for key, value in env['vars'].iteritems():
+        for key, value in env['vars'].items():
             table.add_row([key, value])
         click.echo(table)
         return
