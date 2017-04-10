@@ -21,12 +21,15 @@ def core_commands(ctx, zone, config_path, remotename, debug):
     if not config:
         config = {}
         config['auth_token'] = getenv('CITADEL_AUTH_TOKEN')
-        config['citadel_url'] = getenv('CITADEL_URL')
-        config['sso_url'] = getenv('SSO_URL')
+        config['citadel_url'] = getenv('CITADEL_URL', 'http://citadel.ricebook.net')
+        config['sso_url'] = getenv('SSO_URL', 'http://sso.ricebook.net')
         click.echo('config saved to {}'.format(config_path))
 
     if debug:
         logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] [%(process)d] [%(levelname)s] [%(filename)s @ %(lineno)s]: %(message)s', datefmt='%Y-%m-%d %H:%M:%S %z')
+
+    if not config['auth_token']:
+        raise Exception('CITADEL_AUTH_TOKEN not found')
 
     coreapi = CoreAPI(config['citadel_url'].strip('/'), auth_token=config['auth_token'], zone=zone)
     ctx.obj['coreapi'] = coreapi
