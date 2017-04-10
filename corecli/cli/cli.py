@@ -34,7 +34,7 @@ def core_commands(ctx, zone, config_path, remotename, debug):
     ctx.obj['debug'] = debug
 
 
-for command, function in commands.iteritems():
+for command, function in commands.items():
     core_commands.command(command)(function)
 
 
