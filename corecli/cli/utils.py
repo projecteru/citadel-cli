@@ -41,7 +41,7 @@ def handle_core_error(f):
         try:
             return f(*args, **kwargs)
         except CoreAPIError as e:
-            click.echo(error(e.message))
+            click.echo(error(str(e)))
             ctx = click.get_current_context()
             ctx.exit(-1)
     return _
