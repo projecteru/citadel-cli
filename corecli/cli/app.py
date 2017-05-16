@@ -3,7 +3,6 @@ import click
 import yaml
 from prettytable import PrettyTable
 
-from citadelpy import CoreAPIError
 from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
                                get_current_branch, handle_core_error, error,
                                info)
@@ -201,6 +200,7 @@ def delete_release_containers(ctx, appname, sha):
 @click.argument('sha', required=False)
 @click.argument('git', required=False)
 @click.pass_context
+@handle_core_error
 def register_release(ctx, appname, sha, git):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -211,14 +211,5 @@ def register_release(ctx, appname, sha, git):
         click.echo(error('repository url is not set, check repository or pass argument'))
         ctx.exit(-1)
 
-    try:
-        core.register_release(appname, sha, git, branch=branch)
-    except CoreAPIError as e:
-        if 'only project under a group' in str(e).lower():
-            click.echo(error(str(e)))
-            ctx.exit()
-        else:
-            click.echo(error(str(e)))
-            ctx.exit(-1)
-
+    core.register_release(appname, sha, git, branch=branch)
     click.echo(info('Register %s %s %s done.' % (appname, sha, git)))
