@@ -3,7 +3,6 @@ import os
 
 import click
 
-from citadelpy import CoreAPIError
 from corecli.cli.utils import error, info, handle_core_error, get_commit_hash, get_remote_url
 
 
@@ -31,6 +30,7 @@ def _get_sha(sha):
 @click.option('--uid', default='', help='uid of user inside container image')
 @click.option('--with-artifacts', default=False, help='automatically detect gitlab artifacts file to upload', is_flag=True)
 @click.pass_context
+@handle_core_error
 def build(ctx, repo, sha, artifact, uid, with_artifacts):
     repo = _get_repo(repo)
     sha = _get_sha(sha)
@@ -40,29 +40,18 @@ def build(ctx, repo, sha, artifact, uid, with_artifacts):
         gitlab_build_id = os.getenv('CI_BUILD_ID', '')
 
     core = ctx.obj['coreapi']
-    try:
-        for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
-            if m['error']:
-                error_lower = m['error'].lower()
-                click.echo(error(m['error']))
-                if 'not found' in error_lower or 'only project under' in error_lower:
-                    ctx.exit()
-                else:
-                    ctx.exit(-1)
-
-            if m['stream']:
-                click.echo(m['stream'], nl=False)
-            if m['status']:
-                click.echo(info(m['status']))
-                if m['progress']:
-                    click.echo(m['progress'])
-    except CoreAPIError as e:
-        error_lower = str(e).lower()
-        click.echo(error(str(e)))
-        if 'not found' in error_lower or 'only project under' in error_lower:
-            ctx.exit()
-        else:
+    for m in core.build(repo, sha, artifact, uid, gitlab_build_id=gitlab_build_id):
+        if m['error']:
+            click.echo(error(m['error']))
             ctx.exit(-1)
+
+        if m['stream']:
+            click.echo(m['stream'], nl=False)
+
+        if m['status']:
+            click.echo(info(m['status']))
+            if m['progress']:
+                click.echo(m['progress'])
 
     click.echo(info('Build %s %s done.' % (repo, sha)))
 
