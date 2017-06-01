@@ -17,6 +17,7 @@ setup(
         'pyyaml',
         'envoy',
         'click',
+        'six',
     ],
     entry_points={
         'console_scripts': [
