@@ -39,11 +39,11 @@ class CoreAPI(object):
                                     **kwargs)
         code = resp.status_code
         if code != 200:
-            raise CoreAPIError('Citadel internal error: code {}, body {}'.format(code, resp.text))
+            raise CoreAPIError(u'Citadel internal error: code {}, body {}'.format(code, resp.text))
         try:
             responson = resp.json()
         except ValueError:
-            raise CoreAPIError('Citadel did not return json, code {}, body {}'.format(resp.status_code, resp.text))
+            raise CoreAPIError(u'Citadel did not return json, code {}, body {}'.format(resp.status_code, resp.text))
         return responson
 
     def request_stream(self, path, method='GET', params=None, data=None, json=None, **kwargs):
@@ -60,12 +60,12 @@ class CoreAPI(object):
 
         code = resp.status_code
         if code != 200:
-            raise CoreAPIError('Citadel internal error: code {}, body {}'.format(code, resp.text))
+            raise CoreAPIError(u'Citadel internal error: code {}, body {}'.format(code, resp.text))
         for line in resp.iter_lines():
             try:
                 yield jsonlib.loads(line)
             except ValueError:
-                raise CoreAPIError('Bad line interrupts stream response: {}'.format(line))
+                raise CoreAPIError(u'Bad line interrupts stream response: {}'.format(line))
 
     def get_app(self, appname):
         return self.request('/app/%s' % appname)
