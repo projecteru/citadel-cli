@@ -6,7 +6,7 @@ Cli for Citadel.
 ## Install
 
 ```shell
-pip install -e git+http://gitlab.ricebook.net/platform/corecli.git#egg=core-cli --src /opt/citadel/src
+pip install -i https://pypi.doubanio.com/simple/ -e git+http://gitlab.ricebook.net/platform/corecli.git#egg=core-cli
 ```
 
 ## Configuration
