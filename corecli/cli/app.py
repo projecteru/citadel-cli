@@ -32,10 +32,6 @@ def _get_appname(appname):
 
 def _get_sha(sha):
     sha = sha or get_commit_hash()
-    if not sha:
-        click.echo(error('commit hash not found, check repository or pass argument.'))
-        ctx = click.get_current_context()
-        ctx.exit(-1)
     return sha
 
 
@@ -207,9 +203,5 @@ def register_release(ctx, appname, sha, git):
     sha = _get_sha(sha)
     git = git or get_remote_url(remote=ctx.obj['remotename'])
     branch = get_current_branch()
-    if not git:
-        click.echo(error('repository url is not set, check repository or pass argument'))
-        ctx.exit(-1)
-
     core.register_release(appname, sha, git, branch=branch)
     click.echo(info('Register %s %s %s done.' % (appname, sha, git)))

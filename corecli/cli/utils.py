@@ -7,8 +7,9 @@ from os import getenv
 
 import click
 import envoy
-import requests
 import yaml
+from click import ClickException
+
 from citadelpy import CoreAPIError
 
 
@@ -75,9 +76,7 @@ def get_commit_hash(cwd=None):
 
     r = envoy.run('git rev-parse HEAD', cwd=cwd)
     if r.status_code:
-        if ctx.obj['debug']:
-            click.echo(debug_log('get_commit_hash error: (stdout)%s, (stderr)%s', r.std_out, r.std_err))
-        return ''
+        raise ClickException(r.std_err)
 
     commit_hash = r.std_out.strip()
     if ctx.obj['debug']:
@@ -93,9 +92,8 @@ def get_remote_url(cwd=None, remote='origin'):
 
     r = envoy.run('git remote get-url %s' % str(remote), cwd=cwd)
     if r.status_code:
-        if ctx.obj['debug']:
-            click.echo(debug_log('get_remote_url error: (stdour)%s, (stderr)%s', r.std_out, r.std_err))
-        return ''
+        raise ClickException(r.std_err)
+
     remote = r.std_out.strip()
 
     # 对gitlab ci需要特殊处理一下

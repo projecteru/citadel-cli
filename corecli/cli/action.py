@@ -9,9 +9,6 @@ from corecli.cli.utils import error, info, handle_core_error, get_commit_hash, g
 def _get_repo(repo):
     ctx = click.get_current_context()
     repo = repo or get_remote_url(remote=ctx.obj['remotename'])
-    if not repo:
-        click.echo(error('repository is not set, check repository or pass argument'))
-        ctx.exit(-1)
     return repo
 
 
