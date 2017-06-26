@@ -64,8 +64,8 @@ class CoreAPI(object):
         for line in resp.iter_lines():
             try:
                 yield jsonlib.loads(line)
-            except ValueError:
-                raise CoreAPIError(u'Bad line interrupts stream response: {}'.format(line))
+            except (ValueError, TypeError):
+                raise CoreAPIError(line)
 
     def get_app(self, appname):
         return self.request('/app/%s' % appname)
