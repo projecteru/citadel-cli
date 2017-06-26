@@ -3,9 +3,7 @@ import click
 import yaml
 from prettytable import PrettyTable
 
-from corecli.cli.utils import (get_appname, get_commit_hash, get_remote_url,
-                               get_current_branch, handle_core_error, error,
-                               info)
+from corecli.cli.utils import get_appname, get_commit_hash, get_remote_url, get_current_branch, error, info
 
 
 def _container_table(containers):
@@ -37,7 +35,6 @@ def _get_sha(sha):
 
 @click.argument('appname', required=False)
 @click.pass_context
-@handle_core_error
 def get_app(ctx, appname):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -51,7 +48,6 @@ def get_app(ctx, appname):
 
 @click.argument('appname', required=False)
 @click.pass_context
-@handle_core_error
 def get_app_envs(ctx, appname):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -70,7 +66,6 @@ def get_app_envs(ctx, appname):
 @click.argument('envvars', nargs=-1)
 @click.option('--app', default='', help='appname, default is from app.yaml')
 @click.pass_context
-@handle_core_error
 def app_env(ctx, action, envname, envvars, app):
     appname = _get_appname(app)
     core = ctx.obj['coreapi']
@@ -109,7 +104,6 @@ def app_env(ctx, action, envname, envvars, app):
 
 @click.argument('appname', required=False)
 @click.pass_context
-@handle_core_error
 def get_app_containers(ctx, appname):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -120,7 +114,6 @@ def get_app_containers(ctx, appname):
 
 @click.argument('appname', required=False)
 @click.pass_context
-@handle_core_error
 def get_app_releases(ctx, appname):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -135,7 +128,6 @@ def get_app_releases(ctx, appname):
 @click.argument('appname', required=False)
 @click.argument('sha', required=False)
 @click.pass_context
-@handle_core_error
 def get_release(ctx, appname, sha):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -151,7 +143,6 @@ def get_release(ctx, appname, sha):
 @click.argument('appname', required=False)
 @click.argument('sha', required=False)
 @click.pass_context
-@handle_core_error
 def get_release_specs(ctx, appname, sha):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -164,7 +155,6 @@ def get_release_specs(ctx, appname, sha):
 @click.argument('appname', required=False)
 @click.argument('sha', required=False)
 @click.pass_context
-@handle_core_error
 def get_release_containers(ctx, appname, sha):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -177,7 +167,6 @@ def get_release_containers(ctx, appname, sha):
 @click.argument('appname', required=False)
 @click.argument('sha', required=False)
 @click.pass_context
-@handle_core_error
 def delete_release_containers(ctx, appname, sha):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)
@@ -196,7 +185,6 @@ def delete_release_containers(ctx, appname, sha):
 @click.argument('sha', required=False)
 @click.argument('git', required=False)
 @click.pass_context
-@handle_core_error
 def register_release(ctx, appname, sha, git):
     core = ctx.obj['coreapi']
     appname = _get_appname(appname)

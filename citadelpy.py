@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import json as jsonlib
 import logging
 
+import simplejson as jsonlib
 from requests import Session
 
 

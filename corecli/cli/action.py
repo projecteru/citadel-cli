@@ -3,7 +3,7 @@ import os
 
 import click
 
-from corecli.cli.utils import error, info, handle_core_error, get_commit_hash, get_remote_url
+from corecli.cli.utils import error, info, get_commit_hash, get_remote_url
 
 
 def _get_repo(repo):
@@ -27,7 +27,6 @@ def _get_sha(sha):
 @click.option('--uid', default='', help='uid of user inside container image')
 @click.option('--with-artifacts', default=False, help='automatically detect gitlab artifacts file to upload', is_flag=True)
 @click.pass_context
-@handle_core_error
 def build(ctx, repo, sha, artifact, uid, with_artifacts):
     repo = _get_repo(repo)
     sha = _get_sha(sha)
@@ -65,7 +64,6 @@ def build(ctx, repo, sha, artifact, uid, with_artifacts):
 @click.option('--envname', default='', help='envname to use')
 @click.option('--extraenv', default='', help='extra environment variables, e.g. --extraenv KEY1=VALUE1 --extraenv KEY2=VALUE2', multiple=True)
 @click.pass_context
-@handle_core_error
 def deploy(ctx, podname, entrypoint, repo, sha, cpu, memory, count, networks, nodename, envname, extraenv):
 
     def _networks_dict(networks):
@@ -91,7 +89,6 @@ def deploy(ctx, podname, entrypoint, repo, sha, cpu, memory, count, networks, no
 
 @click.argument('ids', nargs=-1)
 @click.pass_context
-@handle_core_error
 def remove(ctx, ids):
     if not ids:
         click.echo(error('No ids given'))
@@ -109,7 +106,6 @@ def remove(ctx, ids):
 @click.option('--repo', default='', help='git repository url, default is from `git remote get-url origin`')
 @click.option('--sha', default='', help='git commit hash, default is from `git rev-parse HEAD`')
 @click.pass_context
-@handle_core_error
 def upgrade(ctx, ids, repo, sha):
     if not ids:
         click.echo(error('No ids given'))
@@ -129,7 +125,6 @@ def upgrade(ctx, ids, repo, sha):
 @click.argument('nodename')
 @click.argument('appname')
 @click.pass_context
-@handle_core_error
 def log(ctx, nodename, appname):
     core = ctx.obj['coreapi']
     logs = core.log(nodename, appname)

@@ -3,11 +3,10 @@
 import click
 from prettytable import PrettyTable
 
-from corecli.cli.utils import error, handle_core_error
+from corecli.cli.utils import error
 
 
 @click.pass_context
-@handle_core_error
 def get_networks(ctx):
     core = ctx.obj['coreapi']
     ns = core.get_networks()
@@ -21,7 +20,6 @@ def get_networks(ctx):
 
 @click.argument('podname', required=False)
 @click.pass_context
-@handle_core_error
 def get_pod(ctx, podname):
     core = ctx.obj['coreapi']
 

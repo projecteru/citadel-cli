@@ -3,12 +3,9 @@
 import click
 from prettytable import PrettyTable
 
-from corecli.cli.utils import handle_core_error
-
 
 @click.argument('podname')
 @click.pass_context
-@handle_core_error
 def get_memcap(ctx, podname):
     core = ctx.obj['coreapi']
     res = core.get_memcap(podname)
@@ -21,7 +18,6 @@ def get_memcap(ctx, podname):
 
 @click.argument('podname')
 @click.pass_context
-@handle_core_error
 def sync_memcap(ctx, podname):
     core = ctx.obj['coreapi']
     res = core.sync_memcap(podname)

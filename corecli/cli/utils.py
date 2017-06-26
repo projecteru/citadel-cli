@@ -1,16 +1,13 @@
 # coding: utf-8
-import json
 import os
 import re
-from functools import wraps
 from os import getenv
 
 import click
 import envoy
+import simplejson as json
 import yaml
 from click import ClickException
-
-from citadelpy import CoreAPIError
 
 
 _GITLAB_CI_REMOTE_URL_PATTERN = re.compile(r'http://gitlab-ci-token:(.+)@([\.\w]+)/([-\w]+)/([-\w]+).git')
@@ -34,18 +31,6 @@ def info(text):
 
 def debug_log(fmt, *args):
     return normal(fmt % args)
-
-
-def handle_core_error(f):
-    @wraps(f)
-    def _(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except CoreAPIError as e:
-            click.echo(error(e.message.encode('utf-8')))
-            ctx = click.get_current_context()
-            ctx.exit(-1)
-    return _
 
 
 def get_current_branch(cwd=None):

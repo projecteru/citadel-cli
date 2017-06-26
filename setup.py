@@ -18,6 +18,7 @@ setup(
         'envoy',
         'click',
         'six',
+        'simplejson',
     ],
     entry_points={
         'console_scripts': [
