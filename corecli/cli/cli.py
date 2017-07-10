@@ -22,7 +22,6 @@ def core_commands(ctx, zone, config_path, remotename, debug):
         config = {}
         config['auth_token'] = getenv('CITADEL_AUTH_TOKEN')
         config['citadel_url'] = getenv('CITADEL_URL', 'http://citadel.ricebook.net')
-        config['sso_url'] = getenv('SSO_URL', 'https://sso.ricebook.net')
         click.echo('config saved to {}'.format(config_path))
 
     if debug:

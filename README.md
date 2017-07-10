@@ -15,6 +15,6 @@ pip install -i https://pypi.doubanio.com/simple/ -e git+http://gitlab.ricebook.n
 
 ```shell
 cat > ~/.corecli.json << EOF
-{"sso_url": "http://sso.ricebook.net", "citadel_url": "http://citadel.ricebook.net", "auth_token": "[SSO_AUTH_TOKEN]", "mimiron_url": "", "username": "[SSO_USERNAME]"}
+{"citadel_url": "http://citadel.ricebook.net", "auth_token": "[SSO_AUTH_TOKEN]", "mimiron_url": "", "username": "[SSO_USERNAME]"}
 EOF
 ```
