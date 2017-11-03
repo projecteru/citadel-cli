@@ -12,7 +12,7 @@ class CoreAPIError(Exception):
     pass
 
 
-class CoreAPI(object):
+class CoreAPI:
 
     def __init__(self, host, version='v1', timeout=None, password='', auth_token='', zone=None):
         self.zone = zone
@@ -39,11 +39,11 @@ class CoreAPI(object):
                                     **kwargs)
         code = resp.status_code
         if code != 200:
-            raise CoreAPIError(u'Citadel internal error: code {}, body {}'.format(code, resp.text))
+            raise CoreAPIError('Citadel internal error: code {}, body {}'.format(code, resp.text))
         try:
             responson = resp.json()
         except ValueError:
-            raise CoreAPIError(u'Citadel did not return json, code {}, body {}'.format(resp.status_code, resp.text))
+            raise CoreAPIError('Citadel did not return json, code {}, body {}'.format(resp.status_code, resp.text))
         return responson
 
     def request_stream(self, path, method='GET', params=None, data=None, json=None, **kwargs):
@@ -60,7 +60,7 @@ class CoreAPI(object):
 
         code = resp.status_code
         if code != 200:
-            raise CoreAPIError(u'Citadel internal error: code {}, body {}'.format(code, resp.text))
+            raise CoreAPIError('Citadel internal error: code {}, body {}'.format(code, resp.text))
         for line in resp.iter_lines():
             try:
                 yield jsonlib.loads(line)

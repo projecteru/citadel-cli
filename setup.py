@@ -1,9 +1,18 @@
+import sys
+
 from setuptools import setup, find_packages
 
 
+if sys.version_info < (3, 3):
+    error = """
+Must use Python 3.3 or above, pip >= 9.0.1
+Python {py} detected.
+""".format(py=sys.version_info)
+    sys.exit(1)
+
 setup(
     name='core-cli',
-    version='0.0.2',
+    version='0.5.0',
     author='tonic',
     zip_safe=False,
     author_email='tonic@wolege.ca',
